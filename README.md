@@ -106,6 +106,8 @@ grViz("digraph flowchart {
       ")
 
 ```
+![FLowchart](https://github.com/Aenorieg/FinalProject/blob/master/TRGN%20510%20Final%20Project%20Flowchart.png)
+
 
 ### Loading libraries
 ```{r}
