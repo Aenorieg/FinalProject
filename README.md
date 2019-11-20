@@ -123,7 +123,7 @@ library(RColorBrewer)
 Week 1: Run the Glimma vignette. I will install the necessary packages in R and understand each step in the vignette.
 
 
-Week 2: Load in the data (joins, creating datasets) and do a simple, 1 line unit test to look at the data. I will download 60 datasets (30 from each subtype) and join multiple datasets.
+Week 2: Load in the data (joins, creating datasets) and do a simple, 1 line unit test to look at the data. I will download 60 datasets (30 from each subtype) and join multiple datasets. Will turn this in on Sat Nov 23, 2019.
 
 
 Week 3: Confirm that the data was loaded in correctly and analyze data using the Glimma vignette.
