@@ -17,41 +17,30 @@ Data is obtained from TCGA. I filtered for RNA-Seq experimental strategy, TXT da
 , I will choose 30. 
   
 ### Unit test
-The first 15 genes listed in the first column are: 
+When data is read in: 
 ````
 ENSG00000000003.13
-ENSG00000000005.5
-ENSG00000000419.11
-ENSG00000000457.12
-ENSG00000000460.15
-ENSG00000000938.11
-ENSG00000000971.14
-ENSG00000001036.12
-ENSG00000001084.9
-ENSG00000001167.13
-ENSG00000001460.16
-ENSG00000001461.15
-ENSG00000001497.15
-ENSG00000001561.6
-ENSG00000001617.10
+<fctr>
+X5290
+<int>
+ENSG00000000005.5	47			
+ENSG00000000419.11	1212			
+ENSG00000000457.12	1176			
+ENSG00000000460.15	121			
+ENSG00000000938.11	166			
+ENSG00000000971.14	1012			
+ENSG00000001036.12	4401			
+ENSG00000001084.9	1977			
+ENSG00000001167.13	976			
+ENSG00000001460.16	1638			
+1-10 of 60 rows
 ````
-The last 15 lines listed in the first column are:
+When dataset is made using the 60 text files:
 ````
-ENSGR0000263980.4	
-ENSGR0000264510.4	
-ENSGR0000264819.4	
-ENSGR0000265658.4	
-ENSGR0000270726.4	
-ENSGR0000275287.3	
-ENSGR0000276543.3	
-ENSGR0000277120.3	
-ENSGR0000280767.1	
-ENSGR0000281849.1	
-__no_feature	
-__ambiguous	
-__too_low_aQual	
-__not_aligned	
-__alignment_not_unique	
+[1] "DGEList"
+attr(,"package")
+[1] "edgeR"
+[1] 60487    60
 ````
 
 ### Unit test for normalized data
@@ -123,10 +112,10 @@ library(RColorBrewer)
 Week 1: Run the Glimma vignette. I will install the necessary packages in R and understand each step in the vignette.
 
 
-Week 2: Load in the data (joins, creating datasets) and do a simple, 1 line unit test to look at the data. I will download 60 datasets (30 from each subtype) and join multiple datasets. Will turn this in on Sat Nov 23, 2019.
+Week 2: Load in the data (joins, creating datasets) and do a simple, 1 line unit test to look at the data. I will download 60 datasets (30 from each subtype) and join multiple datasets. Emailed Dr. Craig on 11/19 and agreed on turning this milestone in on Sat Nov 23, 2019.
 
 
-Week 3: Confirm that the data was loaded in correctly and analyze data using the Glimma vignette.
+Week 3: Confirm that the data was loaded in correctly and analyze data using the Glimma vignette.Emailed Dr. Craig on 11/26 and agreed on turning this milestone in on 12/1. 
 
 
 Week 4: Troubleshoot for more errors and enhance the user interface.
