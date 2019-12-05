@@ -746,21 +746,8 @@ COAD_files <- c("9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq.txt", "bda1a9a4-a14f
    "168e5cb2-7390-45ad-ad04-c9aa4416e950.htseq.txt", "0ed65bdf-cb92-47c1-8aeb-42518ce639b8.htseq.txt",                 "4e7c6811-88e4-4bb7-a88f-7491dfa6d072.htseq.txt", "7fb73a84-867a-4c28-aa02-93068efffb7b.htseq.txt",                 "b53f9a9d-b24d-410d-b3e9-f2a8bf22ca27.htseq.txt", "f7ce175f-763e-4a55-97e3-0381d889b0eb.htseq.txt",                 "f346f2d2-285c-455c-ba34-ea8eec3fa881.htseq.txt", "e53e1a83-1979-4e12-bbb7-79b37d0cfe03.htseq.txt",                 "a26d49db-2309-46a0-a3ed-275378d484e7.htseq.txt", "a3f88a5d-7169-465b-bb80-e5999590681c.htseq.txt",                 "c264fe3b-482b-44ec-83a4-73df565663ff.htseq.txt", "bd2dfab3-88a8-4673-ba36-3daf252d0b4d.htseq.txt",                 "7261b656-c79c-4581-a503-15b653e2b5d2.htseq.txt", "ee4dcccc-514b-4cc6-ae63-6ed3e7519a40.htseq.txt",                 "f596eabc-e39a-4e35-9fc6-edade04eb785.htseq.txt", "bf9c448b-bdc9-4f74-b13a-374e6add7939.htseq.txt",                 "564daa81-cfef-45b6-94a0-3249b2724d9b.htseq.txt", "82e00e45-734c-471f-ba97-79ec3b7e0baa.htseq.txt",                 "9c52ed00-325f-4664-8873-327bcaa5ea74.htseq.txt", "fabefb10-5546-4017-8ea1-29982a10fb3c.htseq.txt",                 "32a115cf-570f-4ad9-a123-8e1970062f51.htseq.txt", "05eef9f8-a246-403a-b0be-07d274b6f93a.htseq.txt",                 "5c18c6a8-9ad2-43a8-a3a0-83d8fc0cc257.htseq.txt", "43b292be-5d63-4523-a43f-666d20039208.htseq.txt")
 read.delim(COAD_files[1], nrows = 60)
 ```
-ENSG00000000003.13
-<fctr>
-X5290
-<int>
-ENSG00000000005.5	47			
-ENSG00000000419.11	1212			
-ENSG00000000457.12	1176			
-ENSG00000000460.15	121			
-ENSG00000000938.11	166			
-ENSG00000000971.14	1012			
-ENSG00000001036.12	4401			
-ENSG00000001084.9	1977			
-ENSG00000001167.13	976			
-ENSG00000001460.16	1638			
-1-10 of 60 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Screen%20Shot%202019-12-05%20at%202.15.07%20PM.png)
+
 ## Create dataset, join the 60 loaded txt files
 Use edgeR to create a matrix of 60 text files
 ```{r}
@@ -781,37 +768,15 @@ attr(,"package")
 names(x)
 str(x)
 ```
-[1] "samples" "counts" 
-Formal class 'DGEList' [package "edgeR"] with 1 slot
-  ..@ .Data:List of 2
-  .. ..$ :'data.frame':	60 obs. of  4 variables:
-  .. .. ..$ files       : chr [1:60] "9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq.txt" "bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq.txt" "5697212f-b3fd-479f-84b0-ec0aae54534a.htseq.txt" "7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq.txt" ...
-  .. .. ..$ group       : Factor w/ 1 level "1": 1 1 1 1 1 1 1 1 1 1 ...
-  .. .. ..$ lib.size    : num [1:60] 9.02e+07 3.68e+07 4.30e+07 1.12e+08 3.63e+07 ...
-  .. .. ..$ norm.factors: num [1:60] 1 1 1 1 1 1 1 1 1 1 ...
-  .. ..$ : num [1:60487, 1:60] 47 1212 1176 121 166 ...
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ Tags   : chr [1:60487] "ENSG00000000005.5" "ENSG00000000419.11" "ENSG00000000457.12" "ENSG00000000460.15" ...
-  .. .. .. ..$ Samples: chr [1:60] "9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq" "bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq" "5697212f-b3fd-479f-84b0-ec0aae54534a.htseq" "7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq" ...
+![image](https://github.com/Aenorieg/FinalProject/blob/master/names(x).png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/str(x).png)
 
 ## Annotate the samples
 ```{r}
 x$samples
 ```
-files
-<chr>
-group
-<fctr>
-9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq	9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq.txt	1	
-bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq	bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq.txt	1	
-5697212f-b3fd-479f-84b0-ec0aae54534a.htseq	5697212f-b3fd-479f-84b0-ec0aae54534a.htseq.txt	1	
-7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq	7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq.txt	1	
-15864159-be88-41c8-bdef-c2c5927cb1a1.htseq	15864159-be88-41c8-bdef-c2c5927cb1a1.htseq.txt	1	
-649b19e1-96e2-4b55-951d-3b6ee9f4b91f.htseq	649b19e1-96e2-4b55-951d-3b6ee9f4b91f.htseq.txt	1	
-86679663-dfc5-46ad-8cf9-c7954c4b339b.htseq	86679663-dfc5-46ad-8cf9-c7954c4b339b.htseq.txt	1	
-28004569-048d-4f8c-99aa-7a8c69a98dcc.htseq	28004569-048d-4f8c-99aa-7a8c69a98dcc.htseq.txt	1	
-911f6378-8a25-4570-9d3b-80f5b5bfc085.htseq	911f6378-8a25-4570-9d3b-80f5b5bfc085.htseq.txt	1	
-d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.htseq	d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.htseq.txt	1	
+![image](https://github.com/Aenorieg/FinalProject/blob/master/x%24samples.png)
 
 # Organize sample information
 
@@ -820,36 +785,7 @@ d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.htseq	d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.
 samplenames <- substring(colnames(x), 1, nchar(colnames(x)))
 samplenames
 ```
- [1] "9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq" "bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq"
- [3] "5697212f-b3fd-479f-84b0-ec0aae54534a.htseq" "7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq"
- [5] "15864159-be88-41c8-bdef-c2c5927cb1a1.htseq" "649b19e1-96e2-4b55-951d-3b6ee9f4b91f.htseq"
- [7] "86679663-dfc5-46ad-8cf9-c7954c4b339b.htseq" "28004569-048d-4f8c-99aa-7a8c69a98dcc.htseq"
- [9] "911f6378-8a25-4570-9d3b-80f5b5bfc085.htseq" "d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.htseq"
-[11] "f3895ae4-1228-49b3-9342-3c3b86cb5243.htseq" "f590941d-19dc-427a-95b6-942c97ea8333.htseq"
-[13] "55aa6d16-3598-42ca-8844-0fe84739ef66.htseq" "0e7094cf-4c79-43f4-8b72-9de259e5e18f.htseq"
-[15] "9a62fe1f-36ec-4e8e-b3d9-bdfc62f71905.htseq" "d2587070-cb7d-440d-ae49-52f5077248e6.htseq"
-[17] "7800bdb2-aa8b-43e0-8e45-1b968872b34e.htseq" "2bcd2efd-4fd6-40ee-86a4-867ae82711b0.htseq"
-[19] "424d8e5f-9fc6-470b-ad2c-b4447b0eb07e.htseq" "934f9dc6-1260-4268-b022-870f1e37dd6f.htseq"
-[21] "0fa55c0e-6f8f-44a6-82fe-9a42495d3484.htseq" "c8544a8a-4352-438d-94d4-3495af2e9a78.htseq"
-[23] "dade0b16-ecc3-43b3-b328-3819a8fc18c6.htseq" "e875ae4e-4645-4e84-b0ff-9c9a694717a9.htseq"
-[25] "debd6982-7c27-42e8-b778-20afcc78a5f3.htseq" "17c88994-9e8e-4f16-8c41-34e98a0d8c52.htseq"
-[27] "7f5a924a-ddf3-45ff-be1f-5b5909305f46.htseq" "fa73bdce-67fb-42aa-883f-635f0e7bcdc6.htseq"
-[29] "abe20df7-6b97-4397-8864-881bac27e92c.htseq" "62f84581-4c7d-4c8e-835c-9304bcec3106.htseq"
-[31] "3abbd2b5-04db-4fe0-8dd1-ea2b48caa4c1.htseq" "087666cd-47ae-4f56-b947-d6aa1c25e8a7.htseq"
-[33] "c14f98e2-8e9b-49f4-a244-3d06c6cb7126.htseq" "13abc91e-fbfc-4c55-bf54-fbd134979ccc.htseq"
-[35] "6ae2dd6c-2a39-411f-a1fc-11e0e6e82165.htseq" "8f77f4f4-b184-40c7-8ab8-2f95b13620b5.htseq"
-[37] "168e5cb2-7390-45ad-ad04-c9aa4416e950.htseq" "0ed65bdf-cb92-47c1-8aeb-42518ce639b8.htseq"
-[39] "4e7c6811-88e4-4bb7-a88f-7491dfa6d072.htseq" "7fb73a84-867a-4c28-aa02-93068efffb7b.htseq"
-[41] "b53f9a9d-b24d-410d-b3e9-f2a8bf22ca27.htseq" "f7ce175f-763e-4a55-97e3-0381d889b0eb.htseq"
-[43] "f346f2d2-285c-455c-ba34-ea8eec3fa881.htseq" "e53e1a83-1979-4e12-bbb7-79b37d0cfe03.htseq"
-[45] "a26d49db-2309-46a0-a3ed-275378d484e7.htseq" "a3f88a5d-7169-465b-bb80-e5999590681c.htseq"
-[47] "c264fe3b-482b-44ec-83a4-73df565663ff.htseq" "bd2dfab3-88a8-4673-ba36-3daf252d0b4d.htseq"
-[49] "7261b656-c79c-4581-a503-15b653e2b5d2.htseq" "ee4dcccc-514b-4cc6-ae63-6ed3e7519a40.htseq"
-[51] "f596eabc-e39a-4e35-9fc6-edade04eb785.htseq" "bf9c448b-bdc9-4f74-b13a-374e6add7939.htseq"
-[53] "564daa81-cfef-45b6-94a0-3249b2724d9b.htseq" "82e00e45-734c-471f-ba97-79ec3b7e0baa.htseq"
-[55] "9c52ed00-325f-4664-8873-327bcaa5ea74.htseq" "fabefb10-5546-4017-8ea1-29982a10fb3c.htseq"
-[57] "32a115cf-570f-4ad9-a123-8e1970062f51.htseq" "05eef9f8-a246-403a-b0be-07d274b6f93a.htseq"
-[59] "5c18c6a8-9ad2-43a8-a3a0-83d8fc0cc257.htseq" "43b292be-5d63-4523-a43f-666d20039208.htseq"
+![image](https://github.com/Aenorieg/FinalProject/blob/master/samplenames.png)
 
 ## Specify which files are Cystic, Mucinous, and Serous (CMS) and which files are Adenocarcinoma
 ```{r}
@@ -871,20 +807,8 @@ x$samples$group <- group
 x$samples
 DF<-x$samples
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/specified%20samples.png)
 
- 
-files
-<chr>
-9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq	9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq.txt	
-bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq	bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq.txt	
-5697212f-b3fd-479f-84b0-ec0aae54534a.htseq	5697212f-b3fd-479f-84b0-ec0aae54534a.htseq.txt	
-7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq	7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq.txt	
-15864159-be88-41c8-bdef-c2c5927cb1a1.htseq	15864159-be88-41c8-bdef-c2c5927cb1a1.htseq.txt	
-649b19e1-96e2-4b55-951d-3b6ee9f4b91f.htseq	649b19e1-96e2-4b55-951d-3b6ee9f4b91f.htseq.txt	
-86679663-dfc5-46ad-8cf9-c7954c4b339b.htseq	86679663-dfc5-46ad-8cf9-c7954c4b339b.htseq.txt	
-28004569-048d-4f8c-99aa-7a8c69a98dcc.htseq	28004569-048d-4f8c-99aa-7a8c69a98dcc.htseq.txt	
-911f6378-8a25-4570-9d3b-80f5b5bfc085.htseq	911f6378-8a25-4570-9d3b-80f5b5bfc085.htseq.txt	
-d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.htseq	d5dca54e-d7e9-4328-b2ca-1d191a2b8b4c.htseq.txt	
 # Script to organize gene annotations
 {
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -896,7 +820,7 @@ install.packages(gsubfn)
 library(gsubfn)
 }
 
-## Script to annotate Genes
+## Annotate Genes
 First install Homo.sapiens, then use a script remove the decimals and numbers after the decimal points in all 60487 ENSEMBL geneid elements
 ```{r}
 library(Homo.sapiens)
@@ -913,19 +837,8 @@ genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL", "TXCHROM"),
                 keytype="ENSEMBL")
 head(genes)
 ```
-ENSEMBL
-<chr>
-SYMBOL
-<chr>
-TXCHROM
-<chr>
-1	ENSG00000000005	TNMD	chrX	
-2	ENSG00000000419	DPM1	chr20	
-3	ENSG00000000457	SCYL3	chr1	
-4	ENSG00000000460	C1orf112	chr1	
-5	ENSG00000000938	FGR	chr1	
-6	ENSG00000000971	CFH	chr1	
-6 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/genes.png)
+
 ## Remove duplicate genes
 ```{r}
 genes <- genes[!duplicated(genes$ENSEMBL),]
@@ -936,52 +849,8 @@ genes <- genes[!duplicated(genes$ENSEMBL),]
 x$genes <- genes
 x
 ```
-9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq	
-bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq	
-5697212f-b3fd-479f-84b0-ec0aae54534a.htseq	
-7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq	
-15864159-be88-41c8-bdef-c2c5927cb1a1.htseq	
-5 rows | 1-1 of 4 columns
-data.frame
-5 x 4
- 
- 
-ENSEMBL
-<chr>
-SYMBOL
-<chr>
-TXCHROM
-<chr>
-1	ENSG00000000005	TNMD	chrX	
-2	ENSG00000000419	DPM1	chr20	
-3	ENSG00000000457	SCYL3	chr1	
-4	ENSG00000000460	C1orf112	chr1	
-5	ENSG00000000938	FGR	chr1	
-5 rows
-data.frame
-5 x 3
- 
- 
-files
-<chr>
-group
-<fctr>
-9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq	9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq.txt	CMS	
-bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq	bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq.txt	CMS	
-5697212f-b3fd-479f-84b0-ec0aae54534a.htseq	5697212f-b3fd-479f-84b0-ec0aae54534a.htseq.txt	CMS	
-7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq	7f9a629b-12ed-48cc-8d5c-1c2f5db9cf1f.htseq.txt	CMS	
-15864159-be88-41c8-bdef-c2c5927cb1a1.htseq	15864159-be88-41c8-bdef-c2c5927cb1a1.htseq.txt	CMS	
-5 rows | 1-3 of 4 columns
-  
-ENSEMBL
-<chr>
-SYMBOL
-<chr>
-TXCHROM
-<chr>
-1	ENSG00000000005	TNMD	chrX	
-2	ENSG00000000419	DPM1	chr20	
-3	ENSG00000000457	SCYL3	chr1	
-4	ENSG00000000460	C1orf112	chr1	
-5	ENSG00000000938	FGR	chr1	
-5 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/R%20console.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/data.frame%205x4.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/data.frame%205x3.png)
