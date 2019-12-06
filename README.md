@@ -603,7 +603,7 @@ barcodeplot(efit$t[,3], index=idx$LIM_MAMMARY_LUMINAL_MATURE_UP,
 # Nov 20, 2019
 # TRGN 510 Final Project: Milestone 2
 # Loading in RNA seq colon cancer data from TCGA 
-## RNASeq files for cystic, mucinous, and serous neoplasms and adenocarcinoma
+## RNASeq files for cystic, mucinous, and serous neoplasms (CMS) and adenocarcinoma
 I created a new folder called COAD and stored all 60 files in it. I then changed them to TXT files and opened them.
 
 # Data Packaging
@@ -750,6 +750,9 @@ read.delim(COAD_files[1], nrows = 60)
 
 ## Create dataset, join the 60 loaded txt files
 Use edgeR to create a matrix of 60 text files
+
+#### Known issue: Working Directory
+Spoke to professor Craig on 12/4 and it is ok to ignore the error message and not change root, just setwd since files were downloaded locally.
 ```{r}
 setwd('~/Desktop/COAD_Data/')
 library(edgeR)
@@ -761,8 +764,6 @@ dim(x)
 attr(,"package")
 [1] "edgeR"
 [1] 60487    60
-#### Known issue:
-"The working directory was changed to /Users/ashleynoriega/Desktop/COAD_Data inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks.Meta tags detected: __no_feature, __ambiguous, __too_low_aQual, __not_aligned, __alignment_not_unique". Spoke to professor Craig and it is ok not not change the root, just setwd as my desktop since files were downloaded locally.
 
 ```{r}
 names(x)
@@ -854,3 +855,277 @@ x
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/data.frame%205x4.png)
 
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/data.frame%205x3.png)
+
+# Ashley E Noriega
+# Nov 30, 2019
+# TRGN 510 Final Project: Milestone 3
+# Running the Glimma Vignette
+
+# Data Pre-processing
+
+## Transformations from the raw-scale: convert raw counts to counts per million (CPM) and log2-counts per million (log-CPM)
+```{r}
+cpm <- cpm(x)
+lcpm <- cpm(x, log=TRUE)
+L <- mean(x$samples$lib.size) * 1e-6
+M <- median(x$samples$lib.size) * 1e-6
+c(L, M)
+summary(lcpm)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/lcpm1.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/lcpm2.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/lcpm3.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/lcpm4.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/lcpm5.png)
+
+## Remove lowly expressed genes
+True signifies how many genes have counts equal to zero, meaning genes are unexpressed throughout all samples. 
+```{r}
+table(rowSums(x$counts==0)==9)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Counts%3D0.png)
+
+## Filter genes while keeping as many genes as possible with worthwile counts
+```{r}
+keep.exprs <- filterByExpr(x, group=group)
+x <- x[keep.exprs,, keep.lib.sizes=FALSE]
+dim(x)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/dim(x).png)
+
+## Plot the density of log-CPM values for raw and filtered data
+```{r}
+lcpm.cutoff <- log2(10/M + 2/L)
+library(RColorBrewer)
+nsamples <- ncol(x)
+col <- brewer.pal(nsamples, "Paired")
+par(mfrow=c(1,2))
+plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.26), las=2, main="", xlab="")
+title(main="A. Raw data", xlab="Log-cpm")
+abline(v=lcpm.cutoff, lty=3)
+for (i in 2:nsamples){
+den <- density(lcpm[,i])
+lines(den$x, den$y, col=col[i], lwd=2)
+}
+legend("topright", samplenames, text.col=col, bty="n")
+lcpm <- cpm(x, log=TRUE)
+plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.26), las=2, main="", xlab="")
+title(main="B. Filtered data", xlab="Log-cpm")
+abline(v=lcpm.cutoff, lty=3
+for (i in 2:nsamples){
+den <- density(lcpm[,i])
+lines(den$x, den$y, col=col[i], lwd=2)
+}
+legend("topright", samplenames, text.col=col, bty="n")
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Raw%20and%20Filtered%20data.png)
+
+## Normalising gene expression distributions
+```{r}
+x <- calcNormFactors(x, method = "TMM")
+x$samples$norm.factors
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/normalize%20gene%20expression%20distribution.png)
+
+## Improve visualization by duplicating data then adjusting the counts
+```{r}
+x2 <- x
+x2$samples$norm.factors <- 1
+x2$counts[,1] <- ceiling(x2$counts[,1]*0.05)
+x2$counts[,2] <- x2$counts[,2]*5
+```
+
+## Boxplot expression distribution of samples for unnormalised data
+```{r}
+par(mfrow=c(1,2))
+lcpm <- cpm(x2, log=TRUE)
+boxplot(lcpm, las=2, col=col, main="")
+title(main="A. Example: Unnormalised data",ylab="Log-cpm")
+x2 <- calcNormFactors(x2)  
+x2$samples$norm.factors
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Unnormalised%20boxplot.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/x2.png)
+
+## Boxplot expression distribution of samples for normalised data
+```{r}
+lcpm <- cpm(x2, log=TRUE)
+boxplot(lcpm, las=2, col=col, main="")
+title(main="B. Example: Normalised data",ylab="Log-cpm")
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/normalised%20boxplot.png)
+
+## Unsupervised clustering of cells: make multi-dimensional scaling plot (MDS) to show simmilarities and dissimilarities between samples in an unsupervised manner
+
+#### Known issue: color palette 
+I spoke to professor Craig on 12/4, ok to ignore error since I am only comparing 2 different subsets of colon cancer. To get rid of this error I would need to add an additional factor: lane.
+```{r}
+lcpm <- cpm(x, log=TRUE)
+par(mfrow=c(1,1)) #1 row, 1 column 
+col.group <- group
+levels(col.group) <-  brewer.pal(nlevels(col.group), "Set1") #n= number of different colors in a palette with the min being 3 
+col.group <- as.character(col.group)
+#col.lane <- lane did not have lanes for my data
+#levels(col.lane) <-  brewer.pal(nlevels(col.lane), "Set2")
+#col.lane <- as.character(col.lane)
+plotMDS(lcpm, labels=group, col=col.group)
+title(main="A. Sample groups")
+#plotMDS(lcpm, labels=lane, col=col.lane, dim=c(3,4))
+#title(main="B. Sequencing lanes")
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/MDS.png)
+
+## Make interactive using Glimma
+HTML page will be generarted and opened in a browser if launch=TRUE
+```{r}
+library(Glimma)
+glMDSPlot(lcpm, labels=paste(group, sep="_"), 
+          groups=x$samples[,c(1,2)], launch=TRUE)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Interactive%20MDS.png)
+
+# Differential expression analysis
+
+## Creating a design matrix
+```{r}
+design <- model.matrix(~0+group)
+colnames(design) <- gsub("group", "", colnames(design))
+design
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Design%20Matrix%201.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Design%20Matrix%202.png)
+
+## Contrasts for pairwise comparisons between cell populations
+```{r}
+library(limma)
+contr.matrix <- makeContrasts(
+   ADENOCARCINOMAvsCMS = ADENOCARCINOMA-CMS, 
+   levels = colnames(design))
+contr.matrix
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/pairwise%20comparisons.png)
+
+## Remove heteroscedascity from count data
+```{r}
+ par(mfrow=c(1,2))
+v <- voom(x, design, plot=TRUE)
+v
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/voom.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%201.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%202.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%203.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%204.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%205.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%206.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%207.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%208.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%209.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%2010.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%2011.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%2012.png)
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/v%2013.png)
+
+## Apply voom precision weights to data
+```{r}
+vfit <- lmFit(v, design)
+vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
+efit <- eBayes(vfit)
+plotSA(efit, main="Final model: Mean-variance trend")
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/voom%20precision.png)
+
+## Examine the number of DE genes
+```{r}
+summary(decideTests(efit))
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/efit.png)
+
+## Set a minimum log-fold change(log-FC) of 1
+```{r}
+tfit <- treat(vfit, lfc=1)
+dt <- decideTests(tfit)
+summary(dt)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/vfit.png)
+
+## Extract genes that are DE in multiple comparisons
+```{r}
+de.common <- which(dt[,1]!=0)
+length(de.common)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/de.common.png)
+
+```{r}
+head(tfit$genes$SYMBOL[de.common], n=20)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/head%20de.common.png)
+
+```{r}
+vennDiagram(dt[,1], circle.col=c("turquoise", "salmon"))
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Venn%20Diagram.png)
+
+## Extract and write results for comparisons of ADENOCARCINOMAvsCMS to a single output file
+```{r}
+write.fit(tfit, dt, file="results.txt")
+```
+
+## Examining individual DE genes from top to bottom
+```{r}
+ADENOCARCINOMA.vs.CMS <- topTreat(tfit, coef=1, n=Inf)
+head(ADENOCARCINOMA.vs.CMS)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/DE%20genes%20top%20to%20bottom.png)
+
+## Summarize results for genes using mean-difference plots that highlight differentially expressed genes
+```{r}
+plotMD(tfit, column=1, status=dt[,1], main=colnames(tfit)[1], 
+       xlim=c(-8,13))
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/mean-difference%20plot%20w:%20vfit.png)
+
+## Make interactive mean-difference plot 
+To open html page in a browser make launch=TRUE
+```{r}
+library(Glimma)
+glMDPlot(tfit, coef=1, status=dt, main=colnames(tfit)[1],
+         side.main="ENSEMBL", counts=lcpm, groups=group, launch=TRUE)
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/interactive%20mean-difference%20plot.png)
+
+## Make heatmap
+Install heatmap.plus beacuse heatmap.2 did not work for my data
+```{r}
+library(gplots)
+library(heatmap.plus)
+ADENOCARCINOMA.vs.CMS.topgenes <- ADENOCARCINOMA.vs.CMS$ENSEMBL[1:100]
+i <- which(v$genes$ENSEMBL %in% ADENOCARCINOMA.vs.CMS.topgenes)
+mycol <- colorpanel(1000,"blue","white","red")
+#par("mar") OUTPUT SHOULD BE [1] 5.1 4.1 4.1 2.1
+par(cex.main=0.8,mar=c(1,1,1,1)) #mar=c(1,1,1,1) ensures margins are large enough
+heatmap.plus(lcpm[i,], col=bluered(20),cexRow=1,cexCol=0.2, margins = c(20,13), main = "HeatMap")
+```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/heatmap.png)
+
+## Gene set testing with Camera
+I spoke to professor Craig on 12/4 and agreed that this step would not work for me becuase I did not have differentlially expressed genes
