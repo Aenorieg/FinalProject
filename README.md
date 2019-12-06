@@ -1155,3 +1155,9 @@ heatmap.plus(lcpm[i,], col=bluered(20),cexRow=1,cexCol=0.2, margins = c(10,10), 
 
 ## Gene set testing with Camera
 I spoke to professor Craig on 12/4 and agreed that this step would not work for me becuase I did not have differentlially expressed genes.
+
+# Ashley E Noriega,
+# Dec 6, 2019
+# TRGN 510 Final Project: Milestone 4
+# Including the HTML
+http://rpubs.com/Aenorieg/557361 
