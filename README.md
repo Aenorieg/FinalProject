@@ -1159,5 +1159,7 @@ I spoke to professor Craig on 12/4 and agreed that this step would not work for 
 # Ashley E Noriega,
 # Dec 6, 2019
 # TRGN 510 Final Project: Milestone 4
-# Including the HTML
+## Including the HTML
+#### Known issue: Interactive plots
+Spoke to professor Craig on 12/6, interactive plots do not show on RPubs HTML.
 http://rpubs.com/Aenorieg/557361 
