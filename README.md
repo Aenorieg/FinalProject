@@ -608,7 +608,7 @@ I created a new folder called COAD and stored all 60 files in it. I then changed
 
 # Data Packaging
 
-## The urls for the 30 files I downloaded locally for cystic, mucinous and serous colon cancer
+## The urls for the 30 files I downloaded locally for cystic, mucinous and serous colon cancer (CMS)
 
 1. https://portal.gdc.cancer.gov/files/536f5a77-0087-457d-ac95-6d1a9abad8cb, UUID 536f5a77-0087-457d-ac95-6d1a9abad8cb, case: TCGA-AA-3516 
 
@@ -734,7 +734,7 @@ I created a new folder called COAD and stored all 60 files in it. I then changed
 30. https://portal.gdc.cancer.gov/files/8b275144-b885-4fb0-af39-fea1e48a970a, UUID: 8b275144-b885-4fb0-af39-fea1e48a970a, case: TCGA-AA-A00Q
 
 ## Load in count data
-First rename the ".count" files to ".txt" and unzip each one by opening each file
+First rename the ".count" files to ".txt" and unzip each one by opening each file.
 ```{r}
 setwd('~/Desktop/COAD_Data/')
 COAD_files <- c("9e8b528b-1172-4c07-a09b-ebb23cf2310c.htseq.txt", "bda1a9a4-a14f-4463-81d2-a4fcca65d6f1.htseq.txt", 
@@ -749,25 +749,22 @@ read.delim(COAD_files[1], nrows = 60)
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/Screen%20Shot%202019-12-05%20at%202.15.07%20PM.png)
 
 ## Create dataset, join the 60 loaded txt files
-Use edgeR to create a matrix of 60 text files
+Use edgeR to create a matrix of 60 text files.
 
 #### Known issue: Working Directory
-Spoke to professor Craig on 12/4 and it is ok to ignore the error message and not change root, just setwd since files were downloaded locally.
+Spoke to professor Craig on 12/4 and it is ok to ignore the error message and not change root, just setwd to desktop since files were downloaded locally.
 ```{r}
 setwd('~/Desktop/COAD_Data/')
 library(edgeR)
-x <- readDGE(COAD_files, columns=c(1,2))
+x <- readDGE(COAD_files, columns=c(1,2)) #joins my 60 files and creates a dataset
 class(x)
 dim(x)
 ```
-[1] "DGEList"
-attr(,"package")
-[1] "edgeR"
-[1] 60487    60
+![image](https://github.com/Aenorieg/FinalProject/blob/master/class(x).png)
 
 ```{r}
-names(x)
-str(x)
+names(x) #accessor function  
+str(x) #displays the structure of x in compact way, alternative to summary and best for displaying contents of lists
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/names(x).png)
 
@@ -806,7 +803,7 @@ group <- as.factor(c("CMS", "CMS", "CMS", "CMS", "CMS", "CMS",
 
 x$samples$group <- group
 x$samples
-DF<-x$samples
+DF<-x$samples #for my own visualization purposes
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/specified%20samples.png)
 
@@ -822,7 +819,7 @@ library(gsubfn)
 }
 
 ## Annotate Genes
-First install Homo.sapiens, then use a script remove the decimals and numbers after the decimal points in all 60487 ENSEMBL geneid elements
+First install Homo.sapiens, then use a script remove the decimals and numbers after the decimal points in all 60487 ENSEMBL geneid elements.
 ```{r}
 library(Homo.sapiens)
 #library(stringr)
@@ -898,12 +895,19 @@ dim(x)
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/dim(x).png)
 
 ## Plot the density of log-CPM values for raw and filtered data
+There is a sample that is a potential outlier (green colored line), could remove the sample for future analysis but spoke to porfessor Craig on 12/4 and agreed to leave the sample in since the vignette has a normalisation step.
+
+#### Known issue: color palette
+Spoke to professor Craig on 12/4 and agreed to stop working on this issue. I understand that the "Paired" palatte only offers 12 colors so every 13th sample repeats color scheme. I tried increasing the number of colors available with colorRampPalatte but was unsuccesful.
 ```{r}
 lcpm.cutoff <- log2(10/M + 2/L)
 library(RColorBrewer)
+#library(colorRamps)
 nsamples <- ncol(x)
-col <- brewer.pal(nsamples, "Paired")
-par(mfrow=c(1,2))
+col <- brewer.pal(nsamples, "Paired") #results in the error message: n too large, allowed maximum for palette Paired is 12. Returning the palette you asked for with that many colors
+#nb.cols = 60
+#col <- colorRampPalette(brewer.pal(nsamples, "Paired"))(nb.cols) #colorRampPalette is a constructor function that builds palettes with arbitrary number of colors by interpolating existing palette 
+par(mfrow=c(1,2)) #1 row, 2 columns
 plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.26), las=2, main="", xlab="")
 title(main="A. Raw data", xlab="Log-cpm")
 abline(v=lcpm.cutoff, lty=3)
@@ -915,7 +919,7 @@ legend("topright", samplenames, text.col=col, bty="n")
 lcpm <- cpm(x, log=TRUE)
 plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.26), las=2, main="", xlab="")
 title(main="B. Filtered data", xlab="Log-cpm")
-abline(v=lcpm.cutoff, lty=3
+abline(v=lcpm.cutoff, lty=3)
 for (i in 2:nsamples){
 den <- density(lcpm[,i])
 lines(den$x, den$y, col=col[i], lwd=2)
@@ -941,18 +945,21 @@ x2$counts[,2] <- x2$counts[,2]*5
 
 ## Boxplot expression distribution of samples for unnormalised data
 ```{r}
-par(mfrow=c(1,2))
+par(mfrow=c(1,1)) #makes boxplot look less cramped 
 lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="A. Example: Unnormalised data",ylab="Log-cpm")
 x2 <- calcNormFactors(x2)  
 x2$samples$norm.factors
 ```
-![image](https://github.com/Aenorieg/FinalProject/blob/master/Unnormalised%20boxplot.png)
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Unnormalised%20boxplot.png) #what boxplot looked like in previous milestone
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/new%20unormalised%20boxplot.png)
 
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/x2.png)
 
 ## Boxplot expression distribution of samples for normalised data
+This step forces the samples to even out, may not be a good thing since there is a potential outlier.
 ```{r}
 lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
@@ -993,7 +1000,8 @@ glMDSPlot(lcpm, labels=paste(group, sep="_"),
 
 ## Creating a design matrix
 ```{r}
-design <- model.matrix(~0+group)
+design <- model.matrix(~0+group) #removes intercept from the factor group
+#design <- model.matrix(~group) leaves intercept from factor group, but model contrasts are more straight forward without intercept
 colnames(design) <- gsub("group", "", colnames(design))
 design
 ```
@@ -1002,6 +1010,7 @@ design
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/Design%20Matrix%202.png)
 
 ## Contrasts for pairwise comparisons between cell populations
+Since I am only comparing CMS and Adenocarcinoma, I will only have 1 pairwise comparison.
 ```{r}
 library(limma)
 contr.matrix <- makeContrasts(
@@ -1012,9 +1021,12 @@ contr.matrix
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/pairwise%20comparisons.png)
 
 ## Remove heteroscedascity from count data
+
+### Voom plot
+Each black dot represents a gene. The red curve is the estimated mean-varience trend used to compute the voom weights.
 ```{r}
  par(mfrow=c(1,2))
-v <- voom(x, design, plot=TRUE)
+v <- voom(x, design, plot=TRUE) #voom converts raw counts to log-CPM values by extracting library sizes and normalisation factors from x
 v
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/voom.png)
@@ -1045,41 +1057,50 @@ v
 
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/v%2013.png)
 
-## Apply voom precision weights to data
+### Apply voom precision weights to data
+Each black dot is a gene. The blue line is the average log2 residual standard deviation computed with the Bayes algorithm.
 ```{r}
 vfit <- lmFit(v, design)
 vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
 efit <- eBayes(vfit)
-plotSA(efit, main="Final model: Mean-variance trend")
+plotSA(efit, main="Final model: Mean-variance trend") #plots log2 residual standard deviations against mean log-CPM values
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/voom%20precision.png)
 
 ## Examine the number of DE genes
+Quick view at how many genes are down-regulated, up-regulated, and not statistically significant. The adjusted p-value cutoff is 5% by default.
 ```{r}
 summary(decideTests(efit))
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/efit.png)
 
 ## Set a minimum log-fold change(log-FC) of 1
+This is a stricter definition of significance and could be overcorrecting since now I don't have any down-regulated or up-regulated genes.
 ```{r}
-tfit <- treat(vfit, lfc=1)
+tfit <- treat(vfit, lfc=1) #p-values calculated from empirical Bayes moderated t-statistics with a minimum log-FC requirement.
 dt <- decideTests(tfit)
+#dt <- decideTests(efit) #for testing purposes
 summary(dt)
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/vfit.png)
 
 ## Extract genes that are DE in multiple comparisons
+I don't have any DE genes if tfit is used. If efit is used, I have 3295 DE genes.
 ```{r}
 de.common <- which(dt[,1]!=0)
 length(de.common)
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/de.common.png)
 
+## The first 20 DE genes
+If efit is used the genes are: "DPM1", "CFH", "LAS1L", "CFTR", "TMEM176A", "DBNDD1", "TFPI", "SLC7A2", "ARF5", "POLDIP2", "ARHGAP33", "UPF1", "MCUB", "POLR2J", "THSD7A", "LIG3", "SPPL2B", "IBTK", "PDK2", "REX1BD" 
 ```{r}
 head(tfit$genes$SYMBOL[de.common], n=20)
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/head%20de.common.png)
 
+## Make Venn Diagram
+My diagram only has 1 circle because I only have 1 pairwise comparison.
 ```{r}
 vennDiagram(dt[,1], circle.col=c("turquoise", "salmon"))
 ```
@@ -1098,6 +1119,7 @@ head(ADENOCARCINOMA.vs.CMS)
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/DE%20genes%20top%20to%20bottom.png)
 
 ## Summarize results for genes using mean-difference plots that highlight differentially expressed genes
+If efit is used, will have read, black and blue genes. Since tfit is used, all genes are black.
 ```{r}
 plotMD(tfit, column=1, status=dt[,1], main=colnames(tfit)[1], 
        xlim=c(-8,13))
@@ -1113,8 +1135,10 @@ glMDPlot(tfit, coef=1, status=dt, main=colnames(tfit)[1],
 ```
 ![image](https://github.com/Aenorieg/FinalProject/blob/master/interactive%20mean-difference%20plot.png)
 
+![image](https://github.com/Aenorieg/FinalProject/blob/master/interactive%20mean-difference%20if%20efit%20used.png) #if tfit was not applied
+
 ## Make heatmap
-Install heatmap.plus beacuse heatmap.2 did not work for my data
+Install heatmap.plus beacuse heatmap.2 did not work for my data.
 ```{r}
 library(gplots)
 library(heatmap.plus)
@@ -1123,9 +1147,11 @@ i <- which(v$genes$ENSEMBL %in% ADENOCARCINOMA.vs.CMS.topgenes)
 mycol <- colorpanel(1000,"blue","white","red")
 #par("mar") OUTPUT SHOULD BE [1] 5.1 4.1 4.1 2.1
 par(cex.main=0.8,mar=c(1,1,1,1)) #mar=c(1,1,1,1) ensures margins are large enough
-heatmap.plus(lcpm[i,], col=bluered(20),cexRow=1,cexCol=0.2, margins = c(20,13), main = "HeatMap")
+heatmap.plus(lcpm[i,], col=bluered(20),cexRow=1,cexCol=0.2, margins = c(10,10), main = "HeatMap") #changed the margins to have a more legible heatmap
 ```
-![image](https://github.com/Aenorieg/FinalProject/blob/master/heatmap.png)
+![image](https://github.com/Aenorieg/FinalProject/blob/master/heatmap.png) #heatmap in prior milestone
+
+![image](https://github.com/Aenorieg/FinalProject/blob/master/new%20heatmap.png)
 
 ## Gene set testing with Camera
-I spoke to professor Craig on 12/4 and agreed that this step would not work for me becuase I did not have differentlially expressed genes
+I spoke to professor Craig on 12/4 and agreed that this step would not work for me becuase I did not have differentlially expressed genes.
