@@ -1081,4 +1081,4 @@ I spoke to professor Craig on 12/4 and agreed that this step would not work for 
 #### Known Issues: Interactive plots
 I spoke to professor Craig on 12/6 and the interactive plots are not embedded in RPubs.
 
-![RPubs](http://rpubs.com/Aenorieg/557361)
+http://rpubs.com/Aenorieg/557361
