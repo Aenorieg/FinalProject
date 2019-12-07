@@ -121,7 +121,7 @@ Week 3: Confirm that the data was loaded in correctly and analyze data using the
 Week 4: Troubleshoot for more errors and enhance the user interface.
 
 ## User Interface
-I anticipate having boxplots, heatmaps, and interactive multi-dimensional scaling (MDS) plots done in an R Notebook. I will submit an HTML page of my completed R Notebook.
+I anticipate having boxplots, heatmaps, and multi-dimensional scaling (MDS) plots done in an R Notebook. I will submit an HTML page of my completed R Notebook.
 
 ### MDS plot
 ```{r}
@@ -215,32 +215,7 @@ files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt",
    "GSM1545545_JMS9-P8c.txt")
 read.delim(files[1], nrow=5)
 ```
-EntrezID
-<int>
-GeneLength
-<int>
-Count
-<int>
-497097	3634	1		
-100503874	3259	0		
-100038431	1634	0		
-19888	9747	0		
-20671	3130	1		
-5 rows
-data.frame
-5 x 3
-EntrezID
-<int>
-GeneLength
-<int>
-Count
-<int>
-497097	3634	1		
-100503874	3259	0		
-100038431	1634	0		
-19888	9747	0		
-20671	3130	1		
-5 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20data.png)
   
 ## Read the 9 text files into R and combining into a matrix of counts
 ```{r}
@@ -249,49 +224,19 @@ x <- readDGE(files, columns=c(1,3))
 class(x)
 dim(x)
 ```
-[1] "DGEList"
-attr(,"package")
-[1] "edgeR"
-[1] 27179     9  
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20dim(x).png)
+
 ```{r}
 names(x)
 str(x)
 ```
-[1] "samples" "counts" 
-Formal class 'DGEList' [package "edgeR"] with 1 slot
-  ..@ .Data:List of 2
-  .. ..$ :'data.frame':	9 obs. of  4 variables:
-  .. .. ..$ files       : chr [1:9] "GSM1545535_10_6_5_11.txt" "GSM1545536_9_6_5_11.txt" "GSM1545538_purep53.txt" "GSM1545539_JMS8-2.txt" ...
-  .. .. ..$ group       : Factor w/ 1 level "1": 1 1 1 1 1 1 1 1 1
-  .. .. ..$ lib.size    : num [1:9] 32863052 35335491 57160817 51368625 75795034 ...
-  .. .. ..$ norm.factors: num [1:9] 1 1 1 1 1 1 1 1 1
-  .. ..$ : num [1:27179, 1:9] 1 0 0 0 1 431 768 4 810 452 ...
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ Tags   : chr [1:27179] "497097" "100503874" "100038431" "19888" ...
-  .. .. .. ..$ Samples: chr [1:9] "GSM1545535_10_6_5_11" "GSM1545536_9_6_5_11" "GSM1545538_purep53" "GSM1545539_JMS8-2" ...
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20str(x).png)
 
 ## Annotate the samples
 ```{r}
 x$samples
 ```
-files
-<chr>
-group
-<fctr>
-lib.size
-<dbl>
-norm.factors
-<dbl>
-GSM1545535_10_6_5_11	GSM1545535_10_6_5_11.txt	1	32863052	1
-GSM1545536_9_6_5_11	GSM1545536_9_6_5_11.txt	1	35335491	1
-GSM1545538_purep53	GSM1545538_purep53.txt	1	57160817	1
-GSM1545539_JMS8-2	GSM1545539_JMS8-2.txt	1	51368625	1
-GSM1545540_JMS8-3	GSM1545540_JMS8-3.txt	1	75795034	1
-GSM1545541_JMS8-4	GSM1545541_JMS8-4.txt	1	60517657	1
-GSM1545542_JMS8-5	GSM1545542_JMS8-5.txt	1	55086324	1
-GSM1545544_JMS9-P7c	GSM1545544_JMS9-P7c.txt	1	21311068	1
-GSM1545545_JMS9-P8c	GSM1545545_JMS9-P8c.txt	1	19958838	1
-9 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20samples%20annotated.png)
   
 ## Organize sample information
 ```{r}
@@ -306,26 +251,7 @@ lane <- as.factor(rep(c("L004","L006","L008"), c(3,4,2)))
 x$samples$lane <- lane
 x$samples
 ```
-files
-<chr>
-group
-<fctr>
-lib.size
-<dbl>
-norm.factors
-<dbl>
-lane
-<fctr>
-10_6_5_11	GSM1545535_10_6_5_11.txt	LP	32863052	1	L004
-9_6_5_11	GSM1545536_9_6_5_11.txt	ML	35335491	1	L004
-purep53	GSM1545538_purep53.txt	Basal	57160817	1	L004
-JMS8-2	GSM1545539_JMS8-2.txt	Basal	51368625	1	L006
-JMS8-3	GSM1545540_JMS8-3.txt	ML	75795034	1	L006
-JMS8-4	GSM1545541_JMS8-4.txt	LP	60517657	1	L006
-JMS8-5	GSM1545542_JMS8-5.txt	Basal	55086324	1	L006
-JMS9-P7c	GSM1545544_JMS9-P7c.txt	ML	21311068	1	L008
-JMS9-P8c	GSM1545545_JMS9-P8c.txt	LP	19958838	1	L008
-9 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20sample%20organized.png)
   
 ## Organize gene annotations
 ```{r}
@@ -335,36 +261,8 @@ genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"),
                 keytype="ENTREZID")
 head(genes)
 ```
-ENTREZID
-<chr>
-SYMBOL
-<chr>
-TXCHROM
-<chr>
-1	497097	Xkr4	chr1	
-2	100503874	Gm19938	NA	
-3	100038431	Gm10568	NA	
-4	19888	Rp1	chr1	
-5	20671	Sox17	chr1	
-6	27395	Mrpl15	chr1	
-6 rows
-data.frame
-6 x 3
- 
- 
-ENTREZID
-<chr>
-SYMBOL
-<chr>
-TXCHROM
-<chr>
-1	497097	Xkr4	chr1	
-2	100503874	Gm19938	NA	
-3	100038431	Gm10568	NA	
-4	19888	Rp1	chr1	
-5	20671	Sox17	chr1	
-6	27395	Mrpl15	chr1	
-6 rows
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20genes%20annotated.png)
+
 ## Resolve duplicate gene IDs
 ```{r}
 library(Mus.musculus)
@@ -377,6 +275,7 @@ library(Mus.musculus)
 x$genes <- genes
 x
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20genes.png)
 
 # Data Pre-processing
 
@@ -390,12 +289,14 @@ M <- median(x$samples$lib.size) * 1e-6
 c(L, M)
 summary(lcpm)
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20lcpm.png)
 
 ## Remove lowly expressed genes
 ```{r}
 library(edgeR)
 table(rowSums(x$counts==0)==9)
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20low%20expression.png)
 
 ## Filter genes while keeping as many genes as possible with worthwile counts
 ```{r}
@@ -404,6 +305,7 @@ keep.exprs <- filterByExpr(x, group=group)
 x <- x[keep.exprs,, keep.lib.sizes=FALSE]
 dim(x)
 ```
+[1] 16624     9
 
 ## Plot the density of log-CPM values for raw and filtered data
 ```{r}
@@ -430,6 +332,7 @@ lines(den$x, den$y, col=col[i], lwd=2)
 }
 legend("topright", samplenames, text.col=col, bty="n")
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20density%20plot.png)
 
 ## Normalize gene expression distributions
 ```{r}
@@ -437,6 +340,7 @@ library(edgeR)
 x <- calcNormFactors(x, method = "TMM")
 x$samples$norm.factors
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20normalized%20gene%20expression%20.png)
 
 ## Improve visualization by duplicating data then adjusting the counts
 ```{r}
@@ -458,6 +362,7 @@ lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="B. Example: Normalised data",ylab="Log-cpm")
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20boxplot.png)
 
 ## Unsupervised clustering of cells: make multi-dimensional scaling plot (MDS) to show simmilarities and dissimilarities between samples in an unsupervised manner
 ```{r}
@@ -475,6 +380,7 @@ title(main="A. Sample groups")
 plotMDS(lcpm, labels=lane, col=col.lane, dim=c(3,4))
 title(main="B. Sequencing lanes")
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20MDS.png)
 
 ## Make interactive using Glimma 
 HTML page will be generarted and opened in a browser if launch=TRUE
@@ -493,6 +399,7 @@ design <- model.matrix(~0+group+lane)
 colnames(design) <- gsub("group", "", colnames(design))
 design
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/vignette-%20design%20matrix.png)
 
 ## Contrasts for pairwise comparisons between cell populations
 ```{r}
@@ -504,6 +411,7 @@ contr.matrix <- makeContrasts(
    levels = colnames(design))
 contr.matrix
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20pairwise%20comparison.png)
 
 ## Remove heteroscedascity from count data
 ```{r}
@@ -512,6 +420,7 @@ par(mfrow=c(1,2))
 v <- voom(x, design, plot=TRUE)
 v
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/vignette-%20voom.png)
 
 ## Apply voom precision weights to data
 ```{r}
@@ -520,11 +429,13 @@ vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
 efit <- eBayes(vfit)
 plotSA(efit, main="Final model: Mean-variance trend")
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20voom%20precision%20.png)
 
 ## Examine the number of DE genes
 ```{r}
 summary(decideTests(efit))
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/vignette-%20DE.png)
 
 ## Set a minimum log-fold change(log-FC) of 1
 ```{r}
@@ -532,6 +443,7 @@ tfit <- treat(vfit, lfc=1)
 dt <- decideTests(tfit)
 summary(dt)
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/vignette-%20tfit.png)
 
 ## Extract genes that are DE in multiple comparisons
 ```{r}
@@ -540,6 +452,7 @@ length(de.common)
 head(tfit$genes$SYMBOL[de.common], n=20)
 vennDiagram(dt[,1:2], circle.col=c("turquoise", "salmon"))
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20venn%20diagram.png)
 
 ## Extract and write results for all 3 comparisons (basalvsLP, basalvsML, and LPvsML) to a single output file
 ```{r}
@@ -552,16 +465,19 @@ basal.vs.lp <- topTreat(tfit, coef=1, n=Inf)
 basal.vs.ml <- topTreat(tfit, coef=2, n=Inf)
 head(basal.vs.lp)
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/vignette-%20basalvslp.png)
 
 ```{r}
 head(basal.vs.ml)
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20basalvsml.png)
 
 ## Summarize results for genes using mean-difference plots that highlight differentially expressed genes
 ```{r}
 plotMD(tfit, column=1, status=dt[,1], main=colnames(tfit)[1], 
        xlim=c(-8,13))
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20PlotMd.png)
 
 ## Make interactive mean-difference plot 
 To open HTML page in a browser, make launch=TRUE
@@ -580,6 +496,7 @@ heatmap.2(lcpm[i,], scale="row",
    col=mycol, trace="none", density.info="none", 
    margin=c(8,6), lhei=c(2,10), dendrogram="column")
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Vignette-%20heatmap.png)
 
 # Gene set testing by applying the camera method on c2 gene signatures from the Broad Institute’s MSigDB c2 collection
 ```{r}
@@ -592,12 +509,13 @@ head(cam.BasalvsML,5)
 cam.LPvsML <- camera(v,idx,design,contrast=contr.matrix[,3])
 head(cam.LPvsML,5)
 ```
-
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Camera.png)
 
 ```{r}
 barcodeplot(efit$t[,3], index=idx$LIM_MAMMARY_LUMINAL_MATURE_UP, 
             index2=idx$LIM_MAMMARY_LUMINAL_MATURE_DN, main="LPvsML")
 ```
+![image](https://github.com/Aenorieg/FinalProject/blob/master/Barcode.png)
 
 # Ashley E Noriega,
 # Nov 20, 2019
@@ -1159,7 +1077,8 @@ I spoke to professor Craig on 12/4 and agreed that this step would not work for 
 # Ashley E Noriega,
 # Dec 6, 2019
 # TRGN 510 Final Project: Milestone 4
-## Including the HTML
-#### Known issue: Interactive plots
-Spoke to professor Craig on 12/6, interactive plots do not show on RPubs HTML.
-http://rpubs.com/Aenorieg/557361 
+## HTML containing Knitted R Notebook
+#### Known Issues: Interactive plots
+I spoke to professor Craig on 12/6 and the interactive plots are not embedded in RPubs.
+
+![RPubs](http://rpubs.com/Aenorieg/557361)
